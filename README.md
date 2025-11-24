@@ -19,6 +19,7 @@ Additional features added include task assignments, due dates with overdue warni
 - PHP 8+
 - MySQL / MariaDB
 - Web server (Apache/XAMPP)
+- Linux
 
   ### Setup Instructions
   ...
