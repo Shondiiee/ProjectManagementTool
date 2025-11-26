@@ -30,3 +30,24 @@ $stmt = $db->prepare("
     ORDER BY t.created_at DESC");
 
 $stmt->execute([$project_id]);
+$all_tasks = $stmt->fetchAll();
+
+$tasks = [
+    'To-Do' => [],
+    'In Progress' => [],
+    'Done' => []
+];
+
+foreach($all_tasks as $task){
+    $tasks[$task['status']][] = $task;
+}
+
+$stmt = $db->prepare("
+    SELECT u.id, u.username 
+    FROM users u
+    JOIN project_members pm ON u.id = pm.user_id
+    WHERE pm.project_id = ?
+");
+$stmt->execute([$project_id]);
+$members = $stmt->fetchAll();
+?>
