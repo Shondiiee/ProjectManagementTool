@@ -15,4 +15,18 @@ $stmt = $db->prepare("
     WHERE p.id = ? AND (p.owner_id = ? OR pm.user_id = ?)
 ");
 $stmt->execute([$user_id, $project_id, $user_id, $user_id]);
-$projecgt = $stmt->fetch(PDO::FETCH_ASSOC);
+$project = $stmt->fetch();
+
+if(!$project){
+    header("Location: dashboard.php");
+    exit;
+}
+
+$stmt = $db->prepare("
+    SELECT t.*, u.username as created_by_name
+    FROM tasks t
+    JOIN users u ON t.created_by = u.id
+    WHERE t.project_id = ?
+    ORDER BY t.created_at DESC");
+
+$stmt->execute([$project_id]);
