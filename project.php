@@ -14,3 +14,5 @@ $stmt = $db->prepare("
     LEFT JOIN project_members pm ON p.id = pm.project_id
     WHERE p.id = ? AND (p.owner_id = ? OR pm.user_id = ?)
 ");
+$stmt->execute([$user_id, $project_id, $user_id, $user_id]);
+$projecgt = $stmt->fetch(PDO::FETCH_ASSOC);
