@@ -13,7 +13,7 @@ require_once 'config.php';
 /**
  * Enforce user authentication
  * 
- * Only logged-in users can access project page.
+ * Only logged-in users can access this page.
  * This function checks for active session and riderects if needed.
  */
 requireLogin();
@@ -23,6 +23,7 @@ requireLogin();
  * 
  * $_GET['id'] retrieves the project ID from the URL query string.
  * 
+ * ?? 0 provides a default value of 0 if 'id' is not set, preventing undefined index errors.
  */
 $project_id = $_GET['id'] ?? 0;
 $user_id = getCurrentUserId();
@@ -45,7 +46,7 @@ if(!$project){
 }
 
 $stmt = $db->prepare("
-    SELECT t.*, u.username as created_by_name
+    SELECT t.*, u.username as created_by_name, ua.username as assigned_to_name
     FROM tasks t
     JOIN users u ON t.created_by = u.id
     WHERE t.project_id = ?
