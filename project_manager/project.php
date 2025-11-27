@@ -1,7 +1,29 @@
 <?php
+/**
+ * Project Details Page
+ * 
+ * Displays taks in a Kanban board layout. 
+ * Demontrates complext SQL queries with multiple JOINS, access control, data aggregation, and dynamic UI generation
+ * based on task status.
+ */
+
+
 require_once 'config.php';
+
+/**
+ * Enforce user authentication
+ * 
+ * Only logged-in users can access project page.
+ * This function checks for active session and riderects if needed.
+ */
 requireLogin();
 
+/**
+ * Get Project ID from URL
+ * 
+ * $_GET['id'] retrieves the project ID from the URL query string.
+ * 
+ */
 $project_id = $_GET['id'] ?? 0;
 $user_id = getCurrentUserId();
 $db = getDB();
@@ -80,3 +102,55 @@ $members = $stmt->fetchAll();
             <div class="project-actions">
                 <a href="create_task.php?project_id=<?php echo $project_id; ?>" class="btn btn-primary">
                     + Add Task
+                </a>
+                
+                <?php if ($project['is_owner']): ?>
+                    <a href="invite_member.php?project_id=<?php echo $project_id; ?>" class="btn btn-secondary">
+                        Invite Member
+                    </a>
+                <?php endif; ?>
+            </div>
+        </div>
+        
+        <div class="members-section">
+            <h3>Team Members (<?php echo count($members); ?>)</h3>
+            <div class="members-list">
+                <?php foreach ($members as $member): ?>
+                    <span class="member-badge"><?php echo h($member['username']); ?></span>
+                <?php endforeach; ?>
+            </div>
+        </div>
+        
+        <div class="tasks-board">
+            <?php foreach (['To-Do', 'In Progress', 'Done'] as $status): ?>
+                <div class="task-column">
+                    <h2><?php echo h($status); ?> (<?php echo count($tasks[$status]); ?>)</h2>
+                    <div class="task-list">
+                        <?php if (empty($tasks[$status])): ?>
+                            <p class="empty-column">No tasks</p>
+                        <?php else: ?>
+                            <?php foreach ($tasks[$status] as $task): ?>
+                                <div class="task-card">
+                                    <h3><?php echo h($task['title']); ?></h3>
+                                    <p><?php echo h($task['description']); ?></p>
+                                    <div class="task-meta">
+                                        <small>by <?php echo h($task['created_by_name']); ?></small>
+                                    </div>
+                                    <div class="task-actions">
+                                        <a href="edit_task.php?id=<?php echo $task['id']; ?>" class="btn-small">Edit</a>
+                                        <a href="delete_task.php?id=<?php echo $task['id']; ?>" 
+                                           class="btn-small btn-danger"
+                                           onclick="return confirm('Are you sure you want to delete this task?')">
+                                            Delete
+                                        </a>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</body>
+</html>
