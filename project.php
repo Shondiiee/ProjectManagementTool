@@ -51,3 +51,27 @@ $stmt = $db->prepare("
 $stmt->execute([$project_id]);
 $members = $stmt->fetchAll();
 ?>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?php echo h($project['name']); ?> - Project Management</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h2>Project Management</h2>
+            <div>
+                <a href="dashboard.php" class="btn btn-secondary">Back to Dashboard</a>
+                <a href="logout.php" class="btn btn-secondary">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="project-header">
+            <div>
+                <h1><?php echo h($project['name']); ?></h1>
+                <p><?php echo h($project['description']); ?></p>
