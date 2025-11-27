@@ -75,3 +75,8 @@ $members = $stmt->fetchAll();
             <div>
                 <h1><?php echo h($project['name']); ?></h1>
                 <p><?php echo h($project['description']); ?></p>
+                <p class="project-owner">Owner: <?php echo h($project['owner_name']); ?></p>
+            </div>
+            <div class="project-actions">
+                <a href="create_task.php?project_id=<?php echo $project_id; ?>" class="btn btn-primary">
+                    + Add Task
