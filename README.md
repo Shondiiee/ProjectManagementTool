@@ -29,12 +29,12 @@ Additional features added include task assignments, due dates with overdue warni
   - Start your web server
   - Open phpMyAdmin in your browser: http://localhost/phpmyadmin
   - Click on "New" to create a database
-  - Database name: project_management
+  - Database name: project_manager
   - Collation: utf8mb4_general_ci
   - click "Create"
     
 **Step 4: Import the Database Schema**
-  - Click on the project_management database in the left sidebar
+  - Click on the project_manager database in the left sidebar
   - Click on the "SQL" tab
   - Copy the contents of the database.sql file that is provided in the repository
   - Paste it into the SQL text area
@@ -49,12 +49,12 @@ Additional features added include task assignments, due dates with overdue warni
     
     define('DB_PASS', '');  // Enter your MySQL password if you have one
     
-    define('DB_NAME', 'project_management');
+    define('DB_NAME', 'project_manager');
     
 **Step 6: Run the Application**
   - Ensure your web server is running
   - Open your browser
-  - Navigate to http://localhost/project_management/login.php
+  - Navigate to http://localhost/project_manager/login.php
   - You should see the login page and be able to use the full application.
 
 ### Demo User Credentials
@@ -72,5 +72,5 @@ Username: demo_user
 Email: user@demo.com
 Password: password
 
-Alternatively, you can register a new account directly from the registration page: http://localhost/project_management/register.php
+Alternatively, you can register a new account directly from the registration page: http://localhost/project_manager/register.php
   
