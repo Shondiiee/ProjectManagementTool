@@ -18,16 +18,16 @@ if(empty($username) || empty($password)){
         $stmt = $db->prepare("SELECT id, username, password_hash FROM users WHERE username=?");
         $stmt->execute([$username]);
         $user = $stmt->fetch();
-    }
-    if($user && password_verify($password, $uder['password_hash'])){
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['username'] = $user['username'];
-        header('Location: dashboard.php');
-        exit;
-    } else {
-        $error = 'Invalid username or password.';
-    }
-    catch(PDOException $e){
+    
+        if($user && password_verify($password, $user['password_hash'])){
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            header('Location: dashboard.php');
+            exit;
+        } else {
+            $error = 'Invalid username or password.';
+        }
+    } catch(PDOException $e){
         $error = 'Login failed. Please try again later.';
     }
 }
