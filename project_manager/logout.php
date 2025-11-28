@@ -59,3 +59,19 @@ if(empty($username) || empty($password)){
 }
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Project Management</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="container">
+<div class="auth-box">
+<h1>Login</h1>
+
+<?php if($error): ?>
+    <div class="alert alert-error"><?php echo h($error); ?></div>
+<?php endif; ?>
