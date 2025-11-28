@@ -36,7 +36,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 }
-if(empty($username || empty($password)){
+if(empty($username) || empty($password)){
     $error = 'Please enter both username and password.';
 } else {
     try{
@@ -45,4 +45,17 @@ if(empty($username || empty($password)){
         $stmt->execute([$username]);
         $user = $stmt->fetch();
     }
-})
+    if($user && password_verify($password, $uder['password_hash'])){
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $user['username'];
+        header('Location: dashboard.php');
+        exit;
+    } else {
+        $error = 'Invalid username or password.';
+    }
+}catch(PDOException $e){
+    $error = 'Login failed. Please try again later.';
+}
+}
+}
+?>
