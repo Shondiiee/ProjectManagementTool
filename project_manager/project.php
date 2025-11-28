@@ -49,6 +49,7 @@ $stmt = $db->prepare("
     SELECT t.*, u.username as created_by_name, ua.username as assigned_to_name
     FROM tasks t
     JOIN users u ON t.created_by = u.id
+    LEFT JOIN users ua ON t.assigned_to = ua.id
     WHERE t.project_id = ?
     ORDER BY t.created_at DESC");
 
@@ -66,7 +67,7 @@ foreach($all_tasks as $task){
 }
 
 $stmt = $db->prepare("
-    SELECT u.id, u.username 
+    SELECT u.id, u.username, u.email
     FROM users u
     JOIN project_members pm ON u.id = pm.user_id
     WHERE pm.project_id = ?
@@ -134,10 +135,29 @@ $members = $stmt->fetchAll();
                                 <div class="task-card">
                                     <h3><?php echo h($task['title']); ?></h3>
                                     <p><?php echo h($task['description']); ?></p>
+                                    <?php if ($task['assigned_to_name']): ?>
+                                        <div class="task-assigned">
+                                            Assigned to: <strong><?php echo h($task['assigned_to_name']); ?></strong>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if ($task['due_date']): ?>
+                                        <div class="task-due-date">
+                                            Due: <strong><?php echo date('M d, Y', strtotime($task['due_date'])); ?></strong>
+                                            <?php
+                                                $today = date('Y-m-d');
+                                                $due = $task['due_date'];
+                                                if($due < $today && $task['status'] != 'Done'){
+                                                    echo '<span class="overdue-badge">Overdue</span>';
+                                                }
+                                                ?>
+                                                </div>
+                                    <?php endif; ?>
                                     <div class="task-meta">
                                         <small>by <?php echo h($task['created_by_name']); ?></small>
                                     </div>
                                     <div class="task-actions">
+                                        <a href="view_task.php?id=<?php echo $task['id']; ?>" class="btn-small">View</a>
                                         <a href="edit_task.php?id=<?php echo $task['id']; ?>" class="btn-small">Edit</a>
                                         <a href="delete_task.php?id=<?php echo $task['id']; ?>" 
                                            class="btn-small btn-danger"
