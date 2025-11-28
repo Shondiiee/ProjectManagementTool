@@ -48,3 +48,9 @@ if(empty($username) || empty($password)){
 <?php if($error): ?>
     <div class="alert alert-error"><?php echo h($error); ?></div>
 <?php endif; ?>
+
+<form method="POST" action="">
+    <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required value="<?php echo h($_POST['username']?? ''); ?>">
+    </div>
