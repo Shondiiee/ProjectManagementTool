@@ -1,4 +1,9 @@
 <?php
+/**
+ * User Registration Handler
+ * This handles new user registration with secure password hashing and validation.
+ * Demonstrates proper form handling, input validation, SQL injection prevention, and password security best practices.
+ */
 require_once 'config.php';
 
 $error = '';
@@ -7,15 +12,15 @@ $success = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $email = trim($_POST['email'] ?? '');
-    $password = trim($_POST['password'] ?? '');
-    $confirm_password = trim($_POST['confirm_password'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $confirm_password = $_POST['confirm_password'] ?? '';
 
     if (empty($username) || empty($email) || empty($password)) {
         $error = 'All fields are required.';
     } elseif ($password !== $confirm_password) {
         $error = 'Passwords do not match.';
-    }elseif(strlen($password) < 8){
-        $error = 'Password must be at least 8 characters long.';
+    }elseif(strlen($password) < 6){
+        $error = 'Password must be at least 6 characters long.';
     } else {
         try{
             $db = getDB();
@@ -26,17 +31,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $error = 'Username or email already taken.';
             } else {
                 // Insert new user
-                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $db->prepare('INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)');
+                $password_hash = password_hash($password, PASSWORD_DEFAULT);
+                $stmt = $db->prepare("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)");
                 $stmt->execute([
                     $username,
                     $email,
-                    $hashed_password
+                    $password_hash
                 ]);
-                $success = 'Registration successful! You can now <a href="login.php">login</a>.';
+                $success = 'Registration successful! You can now login</a>.';
             }
         }catch (PDOException $e) {
-            $error = 'Database error: ' . $e->getMessage();
+            $error = 'Registration failed. Please try again.';
         }
     }
 }
@@ -47,18 +52,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Project Management</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
         <div class="auth-box">
-            <h2>Register</h2>
+            <h1>Register</h1>
             <?php if ($error): ?>
                 <div class="alert alert-error"><?php echo h($error); ?></div>
             <?php endif; ?>
 
             <?php if ($success): ?>
-                <div class="alert alert-success"><?php echo h($success); ?>
+                <div class="alert alert-success">
+                    <?php echo h($success); ?>
                 <a href="login.php">Go to Login</a>
             </div>
             <?php endif; ?>
