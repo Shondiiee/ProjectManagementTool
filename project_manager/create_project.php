@@ -1,5 +1,11 @@
 <?php
+/**
+*Create Project File
+* This file allows authenticated users to create new projects.
+*/
+
 require_once 'config.php';
+//Ensure only logged-in users can access the page.
 requireLogin();
 
 $error = '';
@@ -43,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="container">
             <h2>Project Management</h2>
@@ -62,12 +69,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
             
             <form method="POST" action="">
+                <!-- Project Name Field -->
                 <div class="form-group">
                     <label for="name">Project Name:</label>
                     <input type="text" id="name" name="name" required 
                            value="<?php echo h($_POST['name'] ?? ''); ?>">
                 </div>
-                
+                <!-- Project Description Field -->
                 <div class="form-group">
                     <label for="description">Description:</label>
                     <textarea id="description" name="description" rows="4"><?php echo h($_POST['description'] ?? ''); ?></textarea>
