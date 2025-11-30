@@ -1,4 +1,9 @@
 <?php
+/**
+* Main Dashboard Page
+*This page displays all projects that the logged-in user is a member of or owns.
+*/
+
 require_once 'config.php';
 requireLogin();
 
@@ -29,6 +34,7 @@ $projects = $stmt->fetchAll();
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="container">
             <h2>Project Management</h2>
@@ -51,6 +57,7 @@ $projects = $stmt->fetchAll();
                 <a href="create_project.php" class="btn btn-primary">Create Your First Project</a>
             </div>
         <?php else: ?>
+        <!-- Display all projects on Projects Grid -->
             <div class="projects-grid">
                 <?php foreach ($projects as $project): ?>
                     <div class="project-card">
