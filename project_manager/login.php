@@ -1,4 +1,14 @@
 <?php
+/**
+ * User Login Handler
+ * 
+ * This script handles user authentication by using secure password verification.
+ * It demonstrates proper session management, proper password validation using password_verify, and SQL injection prevention.
+ */
+
+require_once 'config.php';
+
+//redirect if already logged in
 if(isLoggedIn()){
     header('Location: dashboard.php');
     exit;
