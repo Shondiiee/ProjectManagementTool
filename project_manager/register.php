@@ -9,12 +9,13 @@ require_once 'config.php';
 $error = '';
 $success = '';
 
+// Process form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
-
+//input validation
     if (empty($username) || empty($email) || empty($password)) {
         $error = 'All fields are required.';
     } elseif ($password !== $confirm_password) {
@@ -24,13 +25,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         try{
             $db = getDB();
-            // Check if username already exists
+            // Check for duplicate username or email
             $stmt = $db->prepare("SELECT id FROM users WHERE username = ? OR email = ?");
             $stmt->execute([$username, $email]);
             if ($stmt->fetch()) {
                 $error = 'Username or email already taken.';
             } else {
-                // Insert new user
+                // password hashing
                 $password_hash = password_hash($password, PASSWORD_DEFAULT);
                 $stmt = $db->prepare("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)");
                 $stmt->execute([
