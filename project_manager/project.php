@@ -2,29 +2,16 @@
 /**
  * Project Details Page
  * 
- * Displays taks in a Kanban board layout. 
- * Demontrates complext SQL queries with multiple JOINS, access control, data aggregation, and dynamic UI generation
+ * Displays tasks in a Kanban board layout. 
+ * Demonstrates complex SQL queries with multiple JOINS, access control, data aggregation, and dynamic UI generation
  * based on task status.
  */
 
 
 require_once 'config.php';
 
-/**
- * Enforce user authentication
- * 
- * Only logged-in users can access this page.
- * This function checks for active session and riderects if needed.
- */
-requireLogin();
 
-/**
- * Get Project ID from URL
- * 
- * $_GET['id'] retrieves the project ID from the URL query string.
- * 
- * ?? 0 provides a default value of 0 if 'id' is not set, preventing undefined index errors.
- */
+requireLogin();
 $project_id = $_GET['id'] ?? 0;
 $user_id = getCurrentUserId();
 $db = getDB();

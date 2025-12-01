@@ -1,8 +1,7 @@
 <?php
 /**
- * User Registration Handler
+ * User Registration File
  * This handles new user registration with secure password hashing and validation.
- * Demonstrates proper form handling, input validation, SQL injection prevention, and password security best practices.
  */
 require_once 'config.php';
 

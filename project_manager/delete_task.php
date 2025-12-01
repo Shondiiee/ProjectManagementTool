@@ -1,4 +1,8 @@
 <?php
+/**
+*Delete Task Handler
+* This script handles task deletion. It shows secure deletion with access control, minimal output and proper redirects.
+*/
 require_once 'config.php';
 requireLogin();
 

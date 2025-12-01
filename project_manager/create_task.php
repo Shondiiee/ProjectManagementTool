@@ -1,4 +1,8 @@
 <?php
+/**
+*Create Task Page 
+*This page allows projects members to create new tasks with assignment and due dates.
+*/
 require_once 'config.php';
 requireLogin();
 
@@ -16,6 +20,16 @@ $stmt = $db->prepare("
 $stmt->execute([$project_id, $user_id, $user_id]);
 $project = $stmt->fetch();
 
+$stmt = $db->prepare("
+    SELECT u.id, u.username
+    FROM users u
+    JOIN project_members pm ON u.id = pm.user_id
+    WHERE pm.project_id = ?
+    ORDER BY u.username
+");
+$stmt->execute([$project_id]);
+$members = $stmt->fetchAll();
+
 if (!$project) {
     header('Location: dashboard.php');
     exit;
@@ -27,14 +41,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title'] ?? '');
     $description = trim($_POST['description'] ?? '');
     $status = $_POST['status'] ?? 'To-Do';
+    $assigned_to = !empty($_POST['assigned_to']) ? $_POST['assigned_to'] : null;
+    $due_date = !empty($_POST['due_date']) ? $_POST['due_date'] : null;
     
     if (empty($title)) {
         $error = 'Task title is required.';
     } else {
         try {
-            $stmt = $db->prepare("INSERT INTO tasks (project_id, title, description, status, created_by) VALUES (?, ?, ?, ?, ?)");
-            $stmt->execute([$project_id, $title, $description, $status, $user_id]);
-            
+            $stmt = $db->prepare("INSERT INTO tasks (project_id, title, description, status, created_by, assigned_to, due_date) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$project_id, $title, $description, $status, $user_id, $assigned_to,$due_date]); 
             header('Location: project.php?id=' . $project_id);
             exit;
         } catch (PDOException $e) {
@@ -90,6 +105,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <option value="In Progress">In Progress</option>
                         <option value="Done">Done</option>
                     </select>
+                </div>
+                <div class ="form-group">
+                    <label for= "assigned_to">Assigned To:</label>
+                    <select id ="assigned_to" name="assigned_to">
+                        <option value="">Unassigned</option>
+                        <?php foreach ($members as $member): ?>
+                            <option value="<?php echo $member['id']; ?>">
+                                <?php echo h($member['username']); ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class = "form-group">
+                    <label for="due_date">Due Date (Optional):</label>
+                    <input type ="date" id="due_date" name="due_date"
+                        value = "<?php echo h($_POST['due_date'] ?? ''); ?>">
                 </div>
                 
                 <button type="submit" class="btn btn-primary">Create Task</button>
