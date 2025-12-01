@@ -16,6 +16,7 @@ if(isLoggedIn()){
 
 $error = '';
 
+//login process
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -25,10 +26,15 @@ if(empty($username) || empty($password)){
 } else {
     try{
         $db=getDB();
+
+        //fetch user by username
         $stmt = $db->prepare("SELECT id, username, password_hash FROM users WHERE username=?");
         $stmt->execute([$username]);
+
+        //fetch user record
         $user = $stmt->fetch();
-    
+
+        //verify password
         if($user && password_verify($password, $user['password_hash'])){
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
